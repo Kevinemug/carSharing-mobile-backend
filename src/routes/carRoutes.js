@@ -39,7 +39,7 @@ const upload = multer({ dest: 'uploads/' });
 const { addcar,getAllCars, updateCar,getCarById,deleteCar} =require('../controllers/carController');
 const router = express.Router();
 
-router.get('/cars', getAllCars);
+router.get('/cars',authenticate, getAllCars);
 router.get('/cars/:id', getCarById);
 router.post('/cars',upload.single('carimage'), authenticate, addcar);
 router.patch('/cars/:id', authenticate, updateCar);

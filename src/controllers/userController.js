@@ -1,5 +1,5 @@
 
-const User = require('../models/userModal'); // Adjust the path to your User model
+const User = require('../models/userModal');
 
 exports.getAllUsers = async (_, res) => {
     try {

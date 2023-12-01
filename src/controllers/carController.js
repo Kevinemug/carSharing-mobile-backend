@@ -30,31 +30,32 @@ exports.addcar = async (req, res) => {
             },
         });
     } catch (error) {
-        // If it's a Mongoose validation error
         if (error.name === 'ValidationError') {
             return res.status(400).json({ message: error.message, errors: error.errors });
         }
         
-        // If it's a MongoDB duplicate key error (e.g., a unique constraint violation)
         if (error.code && error.code === 11000) {
             return res.status(409).json({ message: 'A car with this license plate already exists.' });        }
 
-        // For all other errors, use a generic server error message
         res.status(500).json({ message: 'Server error occurred while adding the car.' });
     }
 };
 
-exports.getAllCars = async (_, res) => {
+exports.getAllCars = async (req, res) => {
+    const ownerId = req.user.userID;
+const username = req.user.username;
+    
     try {
-        const cars = await Car.find({}).populate('ownerId', 'username');
+        const cars = await Car.find({});
         const formattedCars = cars.map(car => {
             return {
-                id: car.carID || car._id, // Use carID if available, otherwise fallback to _id
+                id: car.carID || car._id, 
                 carname: car.carname,
                 carprice: car.carprice,
                 carimage: car.carimage,
                 licensePlate: car.licensePlate,
-                // other fields you might want to include
+                ownerId: ownerId , 
+                username: username           // other fields you might want to include
             };
         });
         res.status(200).json({
@@ -86,14 +87,14 @@ exports.getCarById = async (req, res) => {
 };
 
 exports.updateCar = async (req, res) => {
-    const carId = req.params.id; // Get the ID from the request parameters
-    const updateData = req.body; // Get the update data from the request body
+    const carId = req.params.id; 
+    const updateData = req.body; 
 
     try {
         const updatedCar = await Car.findOneAndUpdate(
-            { carID: carId }, // Assuming you're using the custom carID
+            { carID: carId },
             updateData,
-            { new: true, runValidators: true } // Returns the updated document and runs validators
+            { new: true, runValidators: true }
         );
 
         if (updatedCar) {
@@ -110,10 +111,10 @@ exports.updateCar = async (req, res) => {
 };
 
 exports.deleteCar = async (req, res) => {
-    const carId = req.params.id; // Get the ID from the request parameters
+    const carId = req.params.id;
 
     try {
-        const deletedCar = await Car.findOneAndDelete({ carID: carId }); // Assuming you're using the custom carID
+        const deletedCar = await Car.findOneAndDelete({ carID: carId }); 
 
         if (deletedCar) {
             res.status(200).json({

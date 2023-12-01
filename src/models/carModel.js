@@ -8,7 +8,8 @@ const carSchema = new mongoose.Schema({
     carprice: { type: String, required: true },
     carimage: { type: String, required: true },
     ownerId: { 
-        type: Number, 
+         type:Number,
+        //  mongoose.Schema.Types.ObjectId, 
         ref: 'User',
         required: true 
     },

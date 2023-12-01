@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/userModal'); // adjust path as necessary
-const SECRET_KEY = 'your_secret_key'; // Use environment variables in production
+const User = require('../models/userModal'); 
+const SECRET_KEY = 'your_secret_key'; 
 
 exports.signup = async (req, res) => {
     const { username, password } = req.body;
